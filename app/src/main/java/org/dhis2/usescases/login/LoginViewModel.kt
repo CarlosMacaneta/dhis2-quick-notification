@@ -41,6 +41,8 @@ import org.hisp.dhis.android.core.maintenance.D2Error
 import org.hisp.dhis.android.core.maintenance.D2ErrorCode
 import org.hisp.dhis.android.core.systeminfo.SystemInfo
 import org.hisp.dhis.android.core.user.openid.OpenIDConnectConfig
+import org.saudigitus.quicknotification.ui.util.Constants
+import org.saudigitus.quicknotification.ui.util.Constants.LOGOUT_STATE
 import retrofit2.Response
 import timber.log.Timber
 
@@ -86,6 +88,7 @@ class LoginViewModel(
                             } else if (isSessionLocked) {
                                 view.showUnlockButton()
                             }
+                            preferenceProvider.setValue(Constants.SERVER_URL, serverUrl.value!!)
                             if (!isUserLoggedIn) {
                                 val serverUrl =
                                     preferenceProvider.getString(
@@ -285,6 +288,7 @@ class LoginViewModel(
                     .subscribe(
                         {
                             preferenceProvider.setValue(SESSION_LOCKED, false)
+                            preferenceProvider.setValue(LOGOUT_STATE, true)
                             view.handleLogout()
                         },
                         { view.handleLogout() }
@@ -296,6 +300,9 @@ class LoginViewModel(
     @VisibleForTesting
     fun handleResponse(userResponse: Response<*>) {
         if (userResponse.isSuccessful) {
+            preferenceProvider.setValue(Constants.SERVER_URL, serverUrl.value!!)
+            preferenceProvider.setValue(Constants.USERNAME, userName.value!!)
+            preferenceProvider.setValue(Constants.PASSWORD, password.value!!)
             updateServerUrls()
             updateLoginUsers()
             val displayTrackingMessage = hasToDisplayTrackingMessage()

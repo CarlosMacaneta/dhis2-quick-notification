@@ -47,6 +47,7 @@ import org.dhis2.utils.extension.navigateTo
 import org.dhis2.utils.granularsync.SyncStatusDialog
 import org.dhis2.utils.session.PIN_DIALOG_TAG
 import org.dhis2.utils.session.PinDialog
+import org.saudigitus.quicknotification.ui.QuickNotificationActivity
 
 private const val FRAGMENT = "Fragment"
 private const val INIT_DATA_SYNC = "INIT_DATA_SYNC"
@@ -466,6 +467,10 @@ class MainActivity :
             R.id.delete_account -> {
                 confirmAccountDelete()
             }
+
+            R.id.notifications_app -> {
+                navigateToQuickNotifications()
+            }
         }
 
         if (backDropActive && mainNavigator.isPrograms()) {
@@ -508,6 +513,10 @@ class MainActivity :
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         notificationManager.notify(123456, notificationBuilder.build())
+    }
+
+    private fun navigateToQuickNotifications() {
+        startActivity(Intent(this, QuickNotificationActivity::class.java))
     }
 
     override fun obtainFileView(): File? {
